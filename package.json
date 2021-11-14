@@ -1,0 +1,41 @@
+{
+  "name": "steganography-node-api",
+  "version": "1.0.0",
+  "description": "a simple api thats hide a message in a bitmap image, using Least Significant Bit LSB",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc ./src",
+    "dev-start": "tsnd --transpile-only --ignore-watch node_modules ./src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danilo-ac/steganography-node-api.git"
+  },
+  "keywords": [
+    "rest",
+    "api",
+    "node",
+    "javascript",
+    "steganograph"
+  ],
+  "author": "danilo-ac",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/danilo-ac/steganography-node-api/issues"
+  },
+  "homepage": "https://github.com/danilo-ac/steganography-node-api#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "typescript": "^4.4.4"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/jest": "^27.0.2",
+    "jest": "^27.3.1",
+    "ts-node-dev": "^1.1.8"
+  }
+}
