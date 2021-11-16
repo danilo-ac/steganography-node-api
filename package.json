@@ -7,7 +7,7 @@
     "start": "ts-node ./src/index.ts",
     "dev-start": "tsnd --transpile-only --ignore-watch node_modules ./src/index.ts",
     "build": "tsc ./src",
-    "test": "clear && jest ./src/tests/MessageBusiness.test.ts"
+    "test": "clear && jest ./src/tests/SteganoBusiness.test.ts"
   },
   "repository": {
     "type": "git",
