@@ -20,5 +20,10 @@ export default class FileBusiness {
 
     }
 
+    public newImageToSave(dto: any): any {
+
+        //to-do: create business to save image; I'll need figure out how handle file with express.
+
+    }
 
 }
