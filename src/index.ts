@@ -1,7 +1,9 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
 import { AddressInfo } from 'net'
-import { steganoRoutes } from './Routes/steganoRoutes'
+import steganoController from './Controller/Stegano/SteganoController'
+import fileController from './Controller/File/FileController'
+
 
 const app = express()
 
@@ -20,4 +22,7 @@ app.get("/", (req: Request, res: Response)=>{
     res.status(200).send('Server is succefully running')
 })
 
-app.use('/stegano',steganoRoutes)
+app.post('/write-message-on-image', steganoController.toEmbedSteganography)
+app.get('/decode-message-from-image', steganoController.decodeSteganography)
+
+app.get('/get-image',fileController.getFile)

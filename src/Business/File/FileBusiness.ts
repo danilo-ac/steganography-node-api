@@ -1,6 +1,7 @@
 import path from 'path'
 import fs from 'fs'
 import { FILE_DTO_KEYS, getFileDTO, RequestResult } from '../../Model/File/FileModel';
+import CustomError from '../../Model/Error/CustomError';
 
 
 
@@ -13,7 +14,7 @@ export default class FileBusiness {
         const filePath = path.resolve('src', 'assets', 'tmp', 'encoded', fileName);
 
         if (!fileName || !/[a-zA-Z0-9&._-].bmp/.test(fileName) || !fs.existsSync(filePath)) {
-            throw new Error('Invalid or missing file name')
+            throw new CustomError(400,'Invalid or missing file name')
         }
 
         return RequestResult.toResponseOutputModel('Success to find file', filePath)
