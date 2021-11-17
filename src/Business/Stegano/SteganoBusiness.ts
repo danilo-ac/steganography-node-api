@@ -52,8 +52,7 @@ export default class MessageBusiness {
             throw new Error('Invalid or missing message')
         }
 
-
-        if (!fileName || !/[a-zA-Z0-9&._-].bmp/.test(fileName) || !filePath) {
+        if (!fileName || !/[a-zA-Z0-9&._-].bmp/.test(fileName) || !fs.existsSync(filePath)) {
             throw new Error('Invalid or missing file name')
         }
 
@@ -130,21 +129,103 @@ export default class MessageBusiness {
 
 
 
-    // public async decodeSteganography(
-    //     dto: decodeSteganographyDTO
-    // ): Promise<requestResult> {
+    public async decodeSteganography(
+        dto: decodeSteganographyDTO
+    ): Promise<requestResult> {
 
-    //     const fileName = dto[STEGANO_DTO_KEYS.FILE_NAME]
+        const fileName = dto[STEGANO_DTO_KEYS.FILE_NAME]
 
-    //     const filePath = path.resolve('src', 'assets', 'tmp', fileName);
+        const filePath = path.resolve('src', 'assets', 'tmp', 'encoded', fileName);
 
-    //     if (!fileName || !/[a-zA-Z0-9&._-].bmp/.test(fileName) || !filePath) {
-    //         throw new Error('Invalid or missing file name')
-    //     }
+        if (!fileName || !/[a-zA-Z0-9&._-].bmp/.test(fileName) || !fs.existsSync(filePath)) {
+            throw new Error('Invalid or missing file name')
+        }
+
+
+        try {
+
+            const fileSize: number = fs.readFileSync(filePath).byteLength
+
+            let encodedBytesToRead: number = fileSize - 1
+
+            let recoveredBits: any[] = []
+
+            const encodedHeaderByteLength = 80
+            const decodedHeaderByteLength = 10
+
+            for (let i = 0; i < encodedHeaderByteLength; i++) {
+                recoveredBits.push(fs.readFileSync(filePath)
+                    .at(encodedBytesToRead)
+                    ?.toString(2)
+                    .padStart(8, '0')
+                    .substring(7))
+
+                encodedBytesToRead--
+            }
+
+            let totalEncodedBytes: any = []
+
+            for (let i = 0; totalEncodedBytes.length < decodedHeaderByteLength; i += 8) {
+                const slices = recoveredBits.slice(i, i + 8).join('')
+                totalEncodedBytes.push(slices)
+            }
+
+            totalEncodedBytes = Number(totalEncodedBytes
+                .map((item: any) => {
+                    return String.fromCharCode(parseInt(item, 2))
+                })
+                .join(""));
 
 
 
-    // }
+
+            encodedBytesToRead = totalEncodedBytes - encodedHeaderByteLength
+
+            let finalReadingPosition: number = fileSize - totalEncodedBytes - 1
+
+            let startReadingPosition: number = fileSize - encodedHeaderByteLength - 1
+
+            recoveredBits = []
+
+            for (let i = startReadingPosition;
+                i > finalReadingPosition;
+                i--
+            ) {
+                recoveredBits.push(fs.readFileSync(filePath)
+                    .at(i)
+                    ?.toString(2)
+                    .padStart(8, '0')
+                    .substring(7))
+            }
+
+            let recoveredMessage: any = []
+
+
+            for (let i = 0; recoveredMessage.length < encodedBytesToRead / 8; i += 8) {
+                const slices = recoveredBits.slice(i, i + 8).join('')
+                recoveredMessage.push(slices)
+            }
+
+            recoveredMessage = recoveredMessage
+                .map((item: any) => {
+                    return String.fromCharCode(parseInt(item, 2))
+                })
+                .join("")
+
+
+            if (recoveredMessage.substring(recoveredMessage.length-1) !== ".") {
+                throw new Error("Failed to decode. Something went wrong")
+            }
+
+            console.log(recoveredMessage)
+
+            return requestResult.toResponseOutputModel('Success',recoveredMessage) // to do: also inform the new file name
+
+        } catch (error) {
+            throw error
+        }
+    }
+
 
 
 }
