@@ -1,6 +1,7 @@
 import { Buffer } from 'buffer';
 import fs from 'fs';
 import path from 'path';
+import CustomError from '../../Model/Error/CustomError';
 import { embedSteganographyDTO, STEGANO_DTO_KEYS, messageBitArray, requestResult, decodeSteganographyDTO } from '../../Model/Stegano/SteganoModel';
 
 
@@ -12,7 +13,7 @@ export default class MessageBusiness {
     ): messageBitArray {
 
         if (!input) {
-            throw new Error('No input received');
+            throw new CustomError(400,'No input received');
         }
 
         const message = input;
@@ -49,11 +50,11 @@ export default class MessageBusiness {
         const filePath = path.resolve('src', 'assets', 'tmp', fileName);
 
         if (!message) {
-            throw new Error('Invalid or missing message')
+            throw new CustomError(400,'Invalid or missing message')
         }
 
         if (!fileName || !/[a-zA-Z0-9&._-].bmp/.test(fileName) || !fs.existsSync(filePath)) {
-            throw new Error('Invalid or missing file name')
+            throw new CustomError(400,'Invalid or missing file name')
         }
 
         const fileSize: number = fs.readFileSync(filePath).byteLength
@@ -61,7 +62,7 @@ export default class MessageBusiness {
         const reservedFileBytes = 142 + 80
 
         if (message.length * 8 >= fileSize - reservedFileBytes) {
-            throw new Error('File has not enough size to have steganography')
+            throw new CustomError(406,'File has not enough size to have steganography')
         }
 
 
@@ -137,7 +138,7 @@ export default class MessageBusiness {
         const filePath = path.resolve('src', 'assets', 'tmp', 'encoded', fileName);
 
         if (!fileName || !/[a-zA-Z0-9&._-].bmp/.test(fileName) || !fs.existsSync(filePath)) {
-            throw new Error('Invalid or missing file name')
+            throw new CustomError(400,'Invalid or missing file name')
         }
 
 
@@ -213,7 +214,7 @@ export default class MessageBusiness {
 
 
             if (recoveredMessage.substring(recoveredMessage.length - 1) !== ".") {
-                throw new Error("Failed to decode. Something went wrong")
+                throw new CustomError(500,"Failed to decode. Something went wrong")
             }
 
             return requestResult.toResponseOutputModel('Success to decode message', recoveredMessage)

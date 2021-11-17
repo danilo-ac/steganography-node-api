@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import SteganoBusiness from '../../Business/Stegano/SteganoBusiness'
-import { embedSteganographyDTO, requestResult, STEGANO_DTO_KEYS } from '../../Model/Stegano/SteganoModel'
+import CustomError from '../../Model/Error/CustomError'
+import { decodeSteganographyDTO, embedSteganographyDTO, requestResult, STEGANO_DTO_KEYS } from '../../Model/Stegano/SteganoModel'
 
 
 
@@ -40,6 +41,39 @@ export class SteganoController {
         }
     }
 
+
+
+    public async decodeSteganography(req: Request, res: Response): Promise<requestResult | void> {
+
+        try {
+
+            if (!req.query || !req.query[STEGANO_DTO_KEYS.FILE_NAME]) {
+                throw new CustomError(400, `The following queries are needed: '${[STEGANO_DTO_KEYS.FILE_NAME]}'`)
+            }
+
+            //to-do: req params&query sanitization and validation 
+
+            const dto: decodeSteganographyDTO = {
+                [STEGANO_DTO_KEYS.FILE_NAME]: req.query[STEGANO_DTO_KEYS.FILE_NAME] as string
+            }
+
+            const result: requestResult = await steganoBusiness.decodeSteganography(dto)
+
+            return res
+                .status(200)
+                .send(result)
+                .end()
+
+        } catch (error: any) {
+            
+            const errorResult = requestResult.toResponseOutputModel(error.message)
+
+            return res
+                .status(error.code || 500)
+                .send(errorResult || 'Internal Error')
+                .end()
+        }
+    }
 
 }
 
