@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import multer from "multer";
 import FileBusiness from "../../Business/File/FileBusiness";
 import CustomError from "../../Model/Error/CustomError";
 import { FILE_DTO_KEYS, getFileDTO, RequestResult } from "../../Model/File/FileModel";
@@ -34,6 +35,7 @@ export class FileController {
 
 
         } catch (error: any) {
+
             const errorResult = RequestResult.toResponseOutputModel(error.message)
 
             return res
@@ -42,6 +44,65 @@ export class FileController {
                 .end()
         }
 
+    }
+
+
+    public async uploadFile(req: Request, res: Response): Promise<RequestResult | void> {
+
+        try {
+
+            const multerConfig = new FileBusiness().saveFileConfig()
+            const upload = multer(multerConfig).single('file')
+
+            upload(req, res, function (err) {
+
+                try {
+
+                    if (err instanceof multer.MulterError) {
+                        throw err
+                    } else if (err) {
+                        throw err
+                    }
+
+                    try {
+
+                        const result: RequestResult = RequestResult
+                            .toResponseOutputModel('Success to upload. File name in data:', req.file?.filename)
+
+                        return res
+                            .status(200)
+                            .send(result)
+                            .end()
+
+
+                    } catch (error: any) {
+
+                        const errorResult = RequestResult.toResponseOutputModel(error.message)
+
+                        return res
+                            .status(error.code || 500)
+                            .send(errorResult || 'Internal Error')
+                            .end()
+                    }
+
+
+                } catch (error: any) {
+                    const errorResult = RequestResult.toResponseOutputModel(error.message)
+
+                    return res
+                        .status(error.code || 500)
+                        .send(errorResult)
+                        .end()
+                }
+
+            })
+
+        } catch (error: any) {
+            return res
+                .status(error.code || 500)
+                .send(error.message || 'Internal Error')
+                .end()
+        }
     }
 
 
