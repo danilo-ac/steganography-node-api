@@ -1,218 +1,243 @@
 import SteganoBusiness from "../Business/Stegano/SteganoBusiness"
 import { decodeSteganographyDTO, embedSteganographyDTO, STEGANO_DTO_KEYS } from "../Model/Stegano/SteganoModel"
 
-describe('Suit for stringToBitsArray', () => {
+let encondedFile: string = ''
+let toEncodeMessage: string = 'In computing, the least significant bit (LSB) is the bit position in a binary integer giving the units value, that is, determining whether the number is even or odd. The LSB is sometimes referred to as the low-order bit or right-most bit, due to the convention in positional notation of writing less significant digits further to the right. It is analogous to the least significant digit of a decimal integer, which is the digit in the ones (right-most) position.It is common to assign each bit a position number, ranging from zero to N-1, where N is the number of bits in the binary representation used. Normally, the bit number is simply the exponent for the corresponding bit weight in base-2 (such as in 231..20). A few CPU manufacturers have assigned bit numbers the opposite way (which is not the same as different endianness). In any case, the least significant bit itself remains unambiguous as the unit bit.'
 
-//     it('Should failed to pass message to bit array', async () => {
-//         const steganoBusiness = new SteganoBusiness
 
-//         try {
+describe('Suit for "stringToBitsArray"', () => {
 
-//             steganoBusiness.stringToBitsArray("")
+    it('Should failed to pass message to bit array', async () => {
 
-//         } catch (error: any) {
+        expect.assertions(1)
 
-//             expect(error?.message).toEqual("No input received")
-//         }
-//     })
+        const steganoBusiness = new SteganoBusiness
 
-//     it('Should be sucessfully in pass message to bit array', async () => {
-//         const steganoBusiness = new SteganoBusiness
-//         const result: any = steganoBusiness.stringToBitsArray("test")
+        try {
 
-//         expect(result).toBeDefined()
-//         expect(typeof result === 'object').toBe(true)
-//         expect(result.length).toBeGreaterThanOrEqual(1)
-//     })
+            steganoBusiness.stringToBitsArray("")
+
+        } catch (error: any) {
+
+            expect(error?.message).toEqual("No input received")
+        }
+    })
+
+
+
+    it('Should be sucessfully in pass message to bit array', async () => {
+        const steganoBusiness = new SteganoBusiness
+        const result: any = steganoBusiness.stringToBitsArray("test")
+
+        expect(result).toBeDefined()
+        expect(typeof result === 'object').toBe(true)
+        expect(result.length).toBeGreaterThanOrEqual(1)
+    })
 
 })
+
 
 
 describe('Suit for "toEmbedSteganography"', () => {
 
-//     it('Should failed for empty message', async () => {
+    it('Should failed for empty message', async () => {
 
-//         expect.assertions(1)
+        expect.assertions(1)
 
-//         const failedDTO: embedSteganographyDTO = {
-//             [STEGANO_DTO_KEYS.MESSAGE]: '',
-//             [STEGANO_DTO_KEYS.FILE_NAME]: ''
-//         }
+        const failedDTO: embedSteganographyDTO = {
+            [STEGANO_DTO_KEYS.MESSAGE]: '',
+            [STEGANO_DTO_KEYS.FILE_NAME]: ''
+        }
 
-//         const steganoBusiness = new SteganoBusiness
+        const steganoBusiness = new SteganoBusiness
 
-//         try {
-//             const result = await steganoBusiness.toEmbedSteganography(failedDTO)
-//         } catch (error: any) {
-//             expect(error.message).toEqual('Invalid or missing message')
-//         }
+        try {
+            await steganoBusiness.toEmbedSteganography(failedDTO)
+        } catch (error: any) {
+            expect(error.message).toEqual('Invalid or missing message')
+        }
 
-//     })
-
-//     it('Should failed for empty fileName', async () => {
-
-//         expect.assertions(1)
-
-//         const failedDTO: embedSteganographyDTO = {
-//             [STEGANO_DTO_KEYS.MESSAGE]: 'a',
-//             [STEGANO_DTO_KEYS.FILE_NAME]: ''
-//         }
-
-//         const steganoBusiness = new SteganoBusiness
-
-//         try {
-//             const result = await steganoBusiness.toEmbedSteganography(failedDTO)
-//         } catch (error: any) {
-//             expect(error.message).toEqual('Invalid or missing file name')
-//         }
-
-//     })
-
-//     it('Should failed for invalid fileName extension', async () => {
-
-//         expect.assertions(1)
-
-//         const failedDTO: embedSteganographyDTO = {
-//             [STEGANO_DTO_KEYS.MESSAGE]: 'a',
-//             [STEGANO_DTO_KEYS.FILE_NAME]: 'test.jpeg'
-//         }
-
-//         const steganoBusiness = new SteganoBusiness
-
-//         try {
-//             const result = await steganoBusiness.toEmbedSteganography(failedDTO)
-//         } catch (error: any) {
-//             expect(error.message).toEqual('Invalid or missing file name')
-//         }
-
-//     })
-
-//     it('Should failed for inexistent fileName', async () => {
-
-//         expect.assertions(1)
-
-//         const failedDTO: embedSteganographyDTO = {
-//             [STEGANO_DTO_KEYS.MESSAGE]: 'a',
-//             [STEGANO_DTO_KEYS.FILE_NAME]: 'inexistentFile.bmp'
-//         }
-
-//         const steganoBusiness = new SteganoBusiness
-
-//         try {
-//             const result = await steganoBusiness.toEmbedSteganography(failedDTO)
-//         } catch (error: any) {
-//             expect(error.message).toEqual('Invalid or missing file name')
-//         }
-
-//     })
+    })
 
 
-//     it('Should failed for file sizeless for write', async () => {
+    it('Should failed for empty fileName', async () => {
 
-//         expect.assertions(1)
+        expect.assertions(1)
 
-//         const bigMsg: string = 'a'.repeat(1000024)
+        const failedDTO: embedSteganographyDTO = {
+            [STEGANO_DTO_KEYS.MESSAGE]: 'a',
+            [STEGANO_DTO_KEYS.FILE_NAME]: ''
+        }
 
-//         const failedDTO: embedSteganographyDTO = {
-//             [STEGANO_DTO_KEYS.MESSAGE]: bigMsg,
-//             [STEGANO_DTO_KEYS.FILE_NAME]: 'teste.bmp'
-//         }
+        const steganoBusiness = new SteganoBusiness
 
-//         const steganoBusiness = new SteganoBusiness
+        try {
+            await steganoBusiness.toEmbedSteganography(failedDTO)
+        } catch (error: any) {
+            expect(error.message).toEqual('Invalid or missing file name')
+        }
 
-//         try {
-//             const result = await steganoBusiness.toEmbedSteganography(failedDTO)
-//         } catch (error: any) {
-//             expect(error.message).toEqual('File has not enough size to have steganography')
-//         }
-
-//     })
+    })
 
 
-    // it('Should be sucessfully in create steganography', async () => {
+    it('Should failed for invalid fileName extension', async () => {
 
-    //     const dto: embedSteganographyDTO = {
-    //         [STEGANO_DTO_KEYS.MESSAGE]: 'Código Padrão Americano para o Intercâmbio de Informação (do inglês American Standard Code for Information Interchange - ASCII, pronunciado [áski]) é um sistema de representação de letras, algarismos e sinais de pontuação e de controle, através de um sinal codificado em forma de código binário (cadeias de bits formada por vários 0 e 1), desenvolvido a partir de 1960, que representa um conjunto de 128 sinais: 95 sinais gráficos (letras do alfabeto latino, algarismos arábicos, sinais de pontuação e sinais matemáticos) e 33 sinais de controle, utilizando 7 bits para representar todos os seus símbolos.',
-    //         [STEGANO_DTO_KEYS.FILE_NAME]: 'teste.bmp'
-    //     }
+        expect.assertions(1)
 
-    //     const steganoBusiness = new SteganoBusiness
+        const failedDTO: embedSteganographyDTO = {
+            [STEGANO_DTO_KEYS.MESSAGE]: 'a',
+            [STEGANO_DTO_KEYS.FILE_NAME]: 'test.jpeg'
+        }
 
-    //     try {
+        const steganoBusiness = new SteganoBusiness
 
-    //         const result = await steganoBusiness.toEmbedSteganography(dto)
+        try {
+            await steganoBusiness.toEmbedSteganography(failedDTO)
+        } catch (error: any) {
+            expect(error.message).toEqual('Invalid or missing file name')
+        }
 
-    //         expect(result).toBeDefined()
-    //         expect(result.message).toBeTruthy()
+    })
 
-    //     } catch (error: any) {
-    //         console.error(error)
-    //     }
 
-    // })
+    it('Should failed for inexistent fileName', async () => {
+
+        expect.assertions(1)
+
+        const failedDTO: embedSteganographyDTO = {
+            [STEGANO_DTO_KEYS.MESSAGE]: 'a',
+            [STEGANO_DTO_KEYS.FILE_NAME]: 'inexistentFile.bmp'
+        }
+
+        const steganoBusiness = new SteganoBusiness
+
+        try {
+            await steganoBusiness.toEmbedSteganography(failedDTO)
+        } catch (error: any) {
+            expect(error.message).toEqual('Invalid or missing file name')
+        }
+
+    })
+
+
+
+    it('Should failed for file sizeless for write', async () => {
+
+        expect.assertions(1)
+
+        const bigMsg: string = 'a'.repeat(100)
+
+        const failedDTO: embedSteganographyDTO = {
+            [STEGANO_DTO_KEYS.MESSAGE]: bigMsg,
+            [STEGANO_DTO_KEYS.FILE_NAME]: 'tiny.bmp'
+        }
+
+        const steganoBusiness = new SteganoBusiness
+
+        try {
+            await steganoBusiness.toEmbedSteganography(failedDTO)
+        } catch (error: any) {
+            expect(error.message).toEqual('File has not enough size to have steganography')
+        }
+
+    })
+
+
+
+    it('Should be sucessfully in create steganography', async () => {
+
+        const dto: embedSteganographyDTO = {
+            [STEGANO_DTO_KEYS.MESSAGE]: toEncodeMessage,
+            [STEGANO_DTO_KEYS.FILE_NAME]: 'test.bmp'
+        }
+
+        const steganoBusiness = new SteganoBusiness
+
+        try {
+
+            const result = await steganoBusiness.toEmbedSteganography(dto)
+
+            encondedFile = result.data as string
+
+            expect(result).toBeDefined()
+            expect(result?.message).toBeTruthy()
+            expect(result?.data).toMatch(/[a-zA-Z0-9&._-].bmp/)
+        } catch (error: any) {
+            console.error('Should be sucessfully in create steganography',
+                error)
+        }
+
+    })
 
 })
 
+
+
 describe('Suit for "decodeSteganography"', () => {
 
-    // it('Should failed for empty file name', async () => {
+    it('Should failed for empty file name', async () => {
 
-    //     expect.assertions(1)
+        expect.assertions(1)
 
-    //     const failedDTO: decodeSteganographyDTO = {
-    //         [STEGANO_DTO_KEYS.FILE_NAME]: ''
-    //     }
+        const failedDTO: decodeSteganographyDTO = {
+            [STEGANO_DTO_KEYS.FILE_NAME]: ''
+        }
 
-    //     const steganoBusiness = new SteganoBusiness
+        const steganoBusiness = new SteganoBusiness
 
-    //     try {
-    //         const result = await steganoBusiness.decodeSteganography(failedDTO)
-    //     } catch (error: any) {
-    //         expect(error.message).toEqual('Invalid or missing file name')
-    //     }
+        try {
+            await steganoBusiness.decodeSteganography(failedDTO)
+        } catch (error: any) {
+            expect(error.message).toEqual('Invalid or missing file name')
+        }
 
-    // })
+    })
 
-    // it('Should failed for invalid fileName extension', async () => {
 
-    //     expect.assertions(1)
+    it('Should failed for invalid fileName extension', async () => {
 
-    //     const failedDTO: decodeSteganographyDTO = {
-    //         [STEGANO_DTO_KEYS.FILE_NAME]: 'test.jpeg'
-    //     }
+        expect.assertions(1)
 
-    //     const steganoBusiness = new SteganoBusiness
+        const failedDTO: decodeSteganographyDTO = {
+            [STEGANO_DTO_KEYS.FILE_NAME]: 'test.jpeg'
+        }
 
-    //     try {
-    //         const result = await steganoBusiness.decodeSteganography(failedDTO)
-    //     } catch (error: any) {
-    //         expect(error.message).toEqual('Invalid or missing file name')
-    //     }
+        const steganoBusiness = new SteganoBusiness
 
-    // })
+        try {
 
-    // it('Should failed for inexistent fileName', async () => {
+            await steganoBusiness.decodeSteganography(failedDTO)
 
-    //     expect.assertions(1)
+        } catch (error: any) {
+            expect(error.message).toEqual('Invalid or missing file name')
+        }
 
-    //     const failedDTO: decodeSteganographyDTO = {
-    //         [STEGANO_DTO_KEYS.FILE_NAME]: 'inexistent.bmp'
-    //     }
+    })
 
-    //     const steganoBusiness = new SteganoBusiness
 
-    //     try {
-    //         const result = await steganoBusiness.decodeSteganography(failedDTO)
-    //     } catch (error: any) {
-    //         expect(error.message).toEqual('Invalid or missing file name')
-    //     }
+    it('Should failed for inexistent fileName', async () => {
 
-    // })
+        expect.assertions(1)
+
+        const failedDTO: decodeSteganographyDTO = {
+            [STEGANO_DTO_KEYS.FILE_NAME]: 'inexistent.bmp'
+        }
+
+        const steganoBusiness = new SteganoBusiness
+
+        try {
+            await steganoBusiness.decodeSteganography(failedDTO)
+        } catch (error: any) {
+            expect(error.message).toEqual('Invalid or missing file name')
+        }
+
+    })
+
 
     it('Should be sucessfully in decode steganography', async () => {
 
         const dto: decodeSteganographyDTO = {
-            [STEGANO_DTO_KEYS.FILE_NAME]: 'encoded_test.bmp'
+            [STEGANO_DTO_KEYS.FILE_NAME]: encondedFile
         }
 
         const steganoBusiness = new SteganoBusiness
@@ -223,9 +248,11 @@ describe('Suit for "decodeSteganography"', () => {
 
             expect(result).toBeDefined()
             expect(result.message).toBeTruthy()
+            expect(result.data).toEqual(toEncodeMessage)
 
         } catch (error: any) {
-            console.error(error)
+            console.error('Should be sucessfully in decode steganography',
+                error)
         }
 
     })

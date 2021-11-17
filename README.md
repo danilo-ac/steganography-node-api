@@ -4,7 +4,7 @@ a simple api thats hide a message in a bitmap image, using Least Significant Bit
 
 draft notes:
 
-//a mesagem a ser gravada precisa ser diluída somente nos arquivos de informaçãode pixel e em quantidade de bytes suficientes  para não sobrescrever dados de cabeçalho do arquivo
+//a mensagem a ser gravada precisa ser diluída somente nos arquivos de informaçãode pixel e em quantidade de bytes suficientes  para não sobrescrever dados de cabeçalho do arquivo
 
 // as informações (msg + info ultimo byte) a serem gravadas no arquivo são alocadas em um buffer, cada byte a ser g
 
@@ -28,3 +28,22 @@ Last File Byte (length -1)
 //melhorias
 caso o arquivo não comportar a mensagem, poderia ser dada a opção de redimensionar o tamanho da imagem
 poderia ser facilmente implementado usando o jimp js para o redimensionamento
+
+
+Business Stegano
+ PASS  src/tests/SteganoBusiness.test.ts
+  Suit for "stringToBitsArray"
+    ✓ Should failed to pass message to bit array (2 ms)
+    ✓ Should be sucessfully in pass message to bit array (1 ms)
+  Suit for "toEmbedSteganography"
+    ✓ Should failed for empty message (1 ms)
+    ✓ Should failed for empty fileName
+    ✓ Should failed for invalid fileName extension (1 ms)
+    ✓ Should failed for inexistent fileName (14 ms)
+    ✓ Should failed for file sizeless for write (1 ms)
+    ✓ Should be sucessfully in create steganography (655 ms)
+  Suit for "decodeSteganography"
+    ✓ Should failed for empty file name (1 ms)
+    ✓ Should failed for invalid fileName extension (1 ms)
+    ✓ Should failed for inexistent fileName
+    ✓ Should be sucessfully in decode steganography (125 ms)

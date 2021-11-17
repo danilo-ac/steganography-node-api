@@ -79,9 +79,8 @@ export default class MessageBusiness {
 
         try {
 
-            const newPath = path.resolve('src', 'assets', 'tmp', 'encoded');
-
-            const newFilePath: string = newPath + '/' + Number(new Date()) + '.bmp'
+            const newFileName = Number(new Date()) + '.bmp'
+            const newFilePath = path.resolve('src', 'assets', 'tmp', 'encoded', newFileName);
 
             await fs.promises.copyFile(filePath, newFilePath)
 
@@ -119,7 +118,7 @@ export default class MessageBusiness {
 
             newFile.end()
 
-            return requestResult.toResponseOutputModel('Success') // to do: also inform the new file name
+            return requestResult.toResponseOutputModel('Success to encode. A new image was generated', newFileName)
 
         } catch (error: any) {
             throw error
@@ -213,13 +212,11 @@ export default class MessageBusiness {
                 .join("")
 
 
-            if (recoveredMessage.substring(recoveredMessage.length-1) !== ".") {
+            if (recoveredMessage.substring(recoveredMessage.length - 1) !== ".") {
                 throw new Error("Failed to decode. Something went wrong")
             }
 
-            console.log(recoveredMessage)
-
-            return requestResult.toResponseOutputModel('Success',recoveredMessage) // to do: also inform the new file name
+            return requestResult.toResponseOutputModel('Success to decode message', recoveredMessage)
 
         } catch (error) {
             throw error
