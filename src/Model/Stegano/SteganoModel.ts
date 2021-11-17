@@ -1,13 +1,17 @@
 export type messageBitArray = string[]
 
-export enum EMBED_STEGNANO_DTO_KEYS {
+export enum STEGANO_DTO_KEYS {
     FILE_NAME = 'fileName',
     MESSAGE = 'message'
 }
 
 export type embedSteganographyDTO = {
-    [EMBED_STEGNANO_DTO_KEYS.FILE_NAME]: string,
-    [EMBED_STEGNANO_DTO_KEYS.MESSAGE]: string
+    [STEGANO_DTO_KEYS.FILE_NAME]: string,
+    [STEGANO_DTO_KEYS.MESSAGE]: string
+}
+
+export type decodeSteganographyDTO = {
+    [STEGANO_DTO_KEYS.FILE_NAME]: string
 }
 
 export enum REQUEST_RESULT_KEYS {

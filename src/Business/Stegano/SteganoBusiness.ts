@@ -1,13 +1,13 @@
 import { Buffer } from 'buffer';
 import fs from 'fs';
 import path from 'path';
-import { embedSteganographyDTO, EMBED_STEGNANO_DTO_KEYS, messageBitArray, requestResult } from '../../Model/Stegano/SteganoModel';
+import { embedSteganographyDTO, STEGANO_DTO_KEYS, messageBitArray, requestResult, decodeSteganographyDTO } from '../../Model/Stegano/SteganoModel';
 
 
 export default class MessageBusiness {
     constructor() { }
 
-    public messageToBitsArray(
+    public stringToBitsArray(
         input: string
     ): messageBitArray {
 
@@ -41,13 +41,12 @@ export default class MessageBusiness {
 
         //to do: dto validation
 
-        const fileName: string = dto[EMBED_STEGNANO_DTO_KEYS.FILE_NAME];
-        const message: string = dto[EMBED_STEGNANO_DTO_KEYS.MESSAGE];
+        const fileName: string = dto[STEGANO_DTO_KEYS.FILE_NAME];
+        const message: string = dto[STEGANO_DTO_KEYS.MESSAGE];
 
         //to do: encrypt msg
 
         const filePath = path.resolve('src', 'assets', 'tmp', fileName);
-        console.log(!!filePath)
 
         if (!message) {
             throw new Error('Invalid or missing message')
@@ -60,11 +59,24 @@ export default class MessageBusiness {
 
         const fileSize: number = fs.readFileSync(filePath).byteLength
 
-        if (message.length * 8 >= fileSize - 142) {
+        const reservedFileBytes = 142 + 80
+
+        if (message.length * 8 >= fileSize - reservedFileBytes) {
             throw new Error('File has not enough size to have steganography')
         }
 
-        const messageInBitArray = this.messageToBitsArray(message)
+
+        const messageToBitArray = this.stringToBitsArray(
+            /[a-zA-Z0-9&._-][.]$/.test(message) ? message : message + '.')
+
+        const totalBytesToWriten = messageToBitArray.length + 80
+
+        const newData = this.stringToBitsArray(
+            totalBytesToWriten
+                .toString()
+                .padStart(10, '0')
+        ).concat(messageToBitArray)
+
 
         try {
 
@@ -75,21 +87,20 @@ export default class MessageBusiness {
             await fs.promises.copyFile(filePath, newFilePath)
 
 
-            const startWritePosition = fileSize - messageInBitArray.length
+            const startWritePosition = fileSize - totalBytesToWriten
 
             const newFile = fs.createWriteStream(newFilePath, {
                 start: startWritePosition,
                 flags: 'r+'
             })
 
-            const rewritenBytes: any = Buffer.alloc(messageInBitArray.length)
+            const rewritenBytes: any = Buffer.alloc(totalBytesToWriten)
 
-            let rewritenBytesPosition: number = messageInBitArray.length - 1
+            let rewritenBytesPosition: number = totalBytesToWriten - 1
 
             let fileReadingPosition: number = fileSize - 1
 
-
-            for (let newBit of messageInBitArray) {
+            for (let newBit of newData) {
 
                 let byteToBitReplace: any[] = (await fs.promises.readFile(newFilePath))
                     .at(fileReadingPosition)?.toString(2)
@@ -109,7 +120,6 @@ export default class MessageBusiness {
 
             newFile.end()
 
-
             return requestResult.toResponseOutputModel('Success') // to do: also inform the new file name
 
         } catch (error: any) {
@@ -118,6 +128,23 @@ export default class MessageBusiness {
 
     };
 
+
+
+    // public async decodeSteganography(
+    //     dto: decodeSteganographyDTO
+    // ): Promise<requestResult> {
+
+    //     const fileName = dto[STEGANO_DTO_KEYS.FILE_NAME]
+
+    //     const filePath = path.resolve('src', 'assets', 'tmp', fileName);
+
+    //     if (!fileName || !/[a-zA-Z0-9&._-].bmp/.test(fileName) || !filePath) {
+    //         throw new Error('Invalid or missing file name')
+    //     }
+
+
+
+    // }
 
 
 }

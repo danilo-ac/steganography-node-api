@@ -89,19 +89,45 @@ import fs from 'fs'
 import path from 'path';
 import { Buffer } from 'buffer';
 
-const fileName = '1637039128255.bmp';
+const fileName = '1637111400214.bmp';
 
 const filePath = path.resolve('src', 'assets', 'tmp', 'encoded', fileName);
 
-console.log(fs.readFileSync(filePath).byteLength)
+const len = fs.readFileSync(filePath).byteLength
+
+console.log(len)
 
 // console.log(fs.readFileSync(filePath).at(19338).toString(2).padStart(8, 0))
-console.log(fs.readFileSync(filePath).at(19337).toString(2).padStart(8, 0))
-console.log(fs.readFileSync(filePath).at(19336).toString(2).padStart(8, 0))
-console.log(fs.readFileSync(filePath).at(19335).toString(2).padStart(8, 0))
-console.log(fs.readFileSync(filePath).at(19334).toString(2).padStart(8, 0))
-console.log(fs.readFileSync(filePath).at(19333).toString(2).padStart(8, 0))
-console.log(fs.readFileSync(filePath).at(19332).toString(2).padStart(8, 0))
-console.log(fs.readFileSync(filePath).at(19331).toString(2).padStart(8, 0))
-console.log(fs.readFileSync(filePath).at(19330).toString(2).padStart(8, 0))
 
+let position = len - 1
+
+let count = 0
+
+let recovered = []
+
+while (count < 96) {
+    recovered.push(fs
+        .readFileSync(filePath)
+        .at(position)
+        .toString(2)
+        .padStart(8, 0)
+        .substring(7)
+    )
+
+    position--
+    count++
+
+}
+console.log(recovered)
+//0011 0000 //0
+//0011 0000
+//0011 0000
+//0011 0000
+//0011 0000
+//0011 0000
+//0011 0000
+//0011 0000
+//0011 1001 //9
+//0011 0110 //6
+//0110 0001//a
+//0010 1110//.
